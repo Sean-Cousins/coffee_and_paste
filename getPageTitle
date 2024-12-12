@@ -1,0 +1,10 @@
+function getPageTitle(url) {
+  try {
+    var response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
+    var content = response.getContentText();
+    var titleMatch = content.match(/<title[^>]*>([^<]+)<\/title>/i);
+    return titleMatch ? titleMatch[1].trim() : 'No title found';
+  } catch (e) {
+    return 'ERROR';
+  }
+}
