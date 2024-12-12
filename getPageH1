@@ -1,0 +1,10 @@
+function getPageH1(url) {
+  try {
+    var response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
+    var content = response.getContentText();
+    var h1Matches = content.match(/<h1[^>]*>([^<]+)<\/h1>/gi);
+    return h1Matches ? h1Matches.map(h => h.replace(/<\/?h1[^>]*>/gi, '').trim()) : ['No H1 found'];
+  } catch (e) {
+    return ['ERROR'];
+  }
+}
