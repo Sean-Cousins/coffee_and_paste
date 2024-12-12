@@ -1,0 +1,33 @@
+function getPriceSchema(url) {
+  if (!url) {
+    return "Please provide a valid URL";
+  }
+  
+  try {
+    var response = UrlFetchApp.fetch(url);
+    var content = response.getContentText();
+    
+    var regex = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/;
+    var match = content.match(regex);
+    
+    if (match && match[1]) {
+      var jsonData = JSON.parse(match[1]);
+      if (jsonData["@type"] === "Product" && jsonData.offers) {
+        var offer = jsonData.offers;
+        if (Array.isArray(offer)) {
+          offer = offer[0]; // Take the first offer if it's an array
+        }
+        
+        var price = offer.price || "Price not found";
+        var currency = offer.priceCurrency || "Currency not found";
+        var priceType = offer.priceType || "Regular price";
+        
+        return `Price: ${price} ${currency} (${priceType})`;
+      }
+    }
+    
+    return "Price schema not found";
+  } catch (error) {
+    return "Error: " + error.toString();
+  }
+}
