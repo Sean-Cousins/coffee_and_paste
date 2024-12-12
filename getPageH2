@@ -1,0 +1,10 @@
+function getPageH2(url) {
+  try {
+    var response = UrlFetchApp.fetch(url, {'muteHttpExceptions': true});
+    var content = response.getContentText();
+    var h2Matches = content.match(/<h2[^>]*>([^<]+)<\/h2>/gi);
+    return h2Matches ? h2Matches.map(h => h.replace(/<\/?h2[^>]*>/gi, '').trim()) : ['No H2 found'];
+  } catch (e) {
+    return ['ERROR'];
+  }
+}
